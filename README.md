@@ -1,199 +1,176 @@
-# Website Đăng ký Thông tin Khách hàng (Static + Formspree)
+# Website Đăng ký Thông tin Khách hàng (Airtable Integration)
 
-Website đăng ký thông tin khách hàng sử dụng **GitHub Pages** + **Formspree** (không cần server/PHP/Database).
+Website đăng ký thông tin khách hàng sử dụng **GitHub Pages** + **Airtable** (không cần server/PHP/Database).
 
-## 🌐 Demo
-- **Link:** `https://regis.dodoanloc.github.io`
-- **Form:** `https://regis.dodoanloc.github.io/index.html`
+## 🌐 LINK WEBSITE:
+- **Form đăng ký:** https://dodoanloc.github.io/regis/
+- **Trang quản lý:** https://dodoanloc.github.io/regis/admin.html
 
 ---
 
-## 📁 Cấu trúc dự án
+## 📋 CẤU HÌNH AIRTABLE (BẮT BUỘC)
+
+Để website hoạt động, bạn **PHẢI** làm theo các bước sau:
+
+### **BƯỚC 1: Tạo Airtable Base**
+
+1. Đăng nhập vào [Airtable](https://airtable.com)
+2. Click **"Create a base"** → Chọn **"Start from scratch"**
+3. Đặt tên base: `Customer Registration`
+
+### **BƯỚC 2: Thiết lập Table**
+
+Trong base vừa tạo, đổi tên table từ "Table 1" thành **"Customers"**
+
+Tạo các cột sau:
+
+| Tên cột | Kiểu dữ liệu | Ghi chú |
+|---------|--------------|---------|
+| **Số tài khoản** | Single line text | Số tài khoản khách hàng |
+| **Số điện thoại** | Single line text | SĐT 10-11 số |
+| **Tên khách hàng** | Single line text | Họ và tên |
+| **Ngày đăng ký** | Created time | Tự động ghi lại thờì gian |
+
+**Cách tạo cột "Ngày đăng ký":**
+1. Click dấu **+** để thêm cột mới
+2. Chọn field type: **"Created time"**
+3. Đặt tên: **"Ngày đăng ký"**
+
+### **BƯỚC 3: Lấy Base ID**
+
+1. Mở base "Customer Registration" trong trình duyệt
+2. Nhìn vào URL: `https://airtable.com/appXXXXXXXXXXXXXX/tbl...`
+3. Copy phần `appXXXXXXXXXXXXXX` (bắt đầu bằng **app**)
+   - Ví dụ: `app1234567890abcd`
+
+### **BƯỚC 4: Cập nhật Base ID trong code**
+
+**Cách 1: Edit trực tiếp trên GitHub (Dễ nhất)**
+
+1. Vào: https://github.com/dodoanloc/regis/edit/main/index.html
+2. Tìm dòng: `baseId: ''`
+3. Sửa thành: `baseId: 'appXXXXXXXXXXXXXX'` (thay X bằng ID của bạn)
+4. Tương tự sửa trong file `admin.html`
+5. Click **"Commit changes"**
+
+**Cách 2: Edit local rồi push**
+
+```bash
+cd ~/.openclaw/workspace/customer-registration-static
+
+# Sửa file index.html và admin.html
+# Thay baseId: '' thành baseId: 'appXXXXXXXXXXXXXX'
+
+git add .
+git commit -m "Update Airtable Base ID"
+git push origin main
+```
+
+---
+
+## 📁 CẤU TRÚC DỰ ÁN
 
 ```
 customer-registration-static/
-├── index.html       # Trang đăng ký (form)
+├── index.html       # Form đăng ký (gửi data đến Airtable)
+├── admin.html       # Trang quản lý (xem data từ Airtable)
 ├── thank-you.html   # Trang thông báo thành công
 ├── error.html       # Trang thông báo lỗi
-├── README.md        # Hướng dẫn này
-└── .nojekyll        # (Tùy chọn) Disable Jekyll processing
+└── README.md        # Hướng dẫn này
 ```
 
 ---
 
-## 🚀 Hướng dẫn cài đặt
-
-### Bước 1: Tạo tài khoản Formspree (QUAN TRỌNG)
-
-1. Truy cập: https://formspree.io
-2. Click "Sign Up" để tạo tài khoản (có thể dùng GitHub login)
-3. Tạo form mới:
-   - Click "New Form"
-   - Đặt tên: "Customer Registration"
-   - Email nhận thông báo: `[email-cua-ban]`
-4. Copy **Form ID** (dạng: `xrgjewkn`)
-
-### Bước 2: Cập nhật Form ID trong code
-
-Mở file `index.html`, tìm dòng:
-```html
-<form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-```
-
-Thay `YOUR_FORM_ID` bằng ID thực tế của bạn:
-```html
-<form action="https://formspree.io/f/xrgjewkn" method="POST">
-```
-
-### Bước 3: Tạo GitHub Repository
-
-1. Đăng nhập GitHub
-2. Tạo repo mới: `regis`
-3. Set public
-4. **KHÔNG** tick "Initialize with README"
-
-### Bước 4: Upload files lên GitHub
-
-**Cách 1: Dùng Git command line**
-```bash
-cd customer-registration-static
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/dodoanloc/regis.git
-git push -u origin main
-```
-
-**Cách 2: Upload trực tiếp trên GitHub**
-1. Vào repo `regis`
-2. Click "Add file" → "Upload files"
-3. Kéo thả 3 file: `index.html`, `thank-you.html`, `error.html`
-4. Click "Commit changes"
-
-### Bước 5: Bật GitHub Pages
-
-1. Vào repo → Settings → Pages
-2. Source: Chọn "Deploy from a branch"
-3. Branch: Chọn `main` / `master` → `/ (root)`
-4. Click Save
-5. Đợi 2-5 phút để GitHub build site
-
-### Bước 6: Test website
-
-Truy cập: `https://regis.dodoanloc.github.io`
-
----
-
-## ✨ Tính năng
+## ✨ TÍNH NĂNG
 
 ### Form đăng ký (index.html)
-- ✅ Responsive design (mobile + desktop)
+- ✅ Giao diện đẹp, gradient UI, responsive
 - ✅ Validation: Số tài khoản (chỉ số), SĐT (10-11 số)
-- ✅ UI đẹp với gradient
-- ✅ Thông báo privacy
+- ✅ Gửi trực tiếp đến Airtable qua JavaScript API
+- ✅ Thông báo thành công/lỗi ngay lập tức
+- ✅ Chuyển hướng đến trang thank-you sau khi đăng ký
 
-### Dữ liệu nhận được
-Khi khách hàng submit form, bạn nhận được email với:
-- Số tài khoản
-- Số điện thoại
-- Tên khách hàng
-- Thờì gian submit
-- IP address
-
-### Trang thành công (thank-you.html)
-- Animation đẹp
-- Thông báo rõ ràng
-- Button quay lại
-
-### Trang lỗi (error.html)
-- Thông báo lỗi thân thiện
-- Button thử lại
+### Trang quản lý (admin.html)
+- ✅ Xem toàn bộ danh sách khách hàng
+- ✅ Thống kê: Tổng số KH, KH đăng ký hôm nay
+- ✅ Sắp xếp theo thờì gian mới nhất
+- ✅ Nút làm mới dữ liệu
 
 ---
 
-## 📧 Quản lý submissions
+## 🔒 BẢO MẬT
 
-### Trên Formspree Dashboard
-1. Đăng nhập: https://formspree.io
-2. Vào form của bạn
-3. Xem tất cả submissions
-4. Export data ra CSV/Excel
+**Lưu ý quan trọng:**
+- Token Airtable được hardcode trong file HTML
+- Repo này là **public** → Mọi ngườì đều có thể xem token
+- Đây là **demo/prototype**, không nên dùng cho production thực tế
 
-### Qua Email
-- Mỗi submission sẽ gửi email thông báo
-- Có thể reply trực tiếp từ email
+**Nếu cần bảo mật hơn:**
+- Chuyển repo sang **private**
+- Hoặc dùng server-side proxy để giấu token
+- Hoặc dùng Airtable OAuth thay vì Personal Token
 
 ---
 
-## 🎨 Tùy chỉnh
+## 💰 CHI PHÍ
+
+| Dịch vụ | Free Tier | Paid |
+|---------|-----------|------|
+| **GitHub Pages** | Miễn phí | Miễn phí |
+| **Airtable** | 1,200 records/tháng | $20/tháng |
+
+---
+
+## 🐛 XỬ LÝ LỖI
+
+### "Chưa cấu hình Base ID"
+- Bạn chưa cập nhật `baseId` trong file HTML
+- Làm theo Bước 4 ở trên
+
+### "401 Unauthorized"
+- Token không hợp lệ hoặc đã hết hạn
+- Kiểm tra lại token trong Airtable settings
+
+### "Could not find table Customers"
+- Tên table không đúng (phải là "Customers")
+- Hoặc tên cột không khớp (xem Bước 2)
+
+### "Network error"
+- Kiểm tra kết nối internet
+- Airtable API có thể tạm thờì bị lỗi
+
+---
+
+## 📝 EXPORT DỮ LIỆU
+
+Từ Airtable, bạn có thể:
+1. Export CSV: Click **...** → **Download CSV**
+2. Export Excel: Dùng Airtable desktop app
+3. API access: Sử dụng Airtable API để lấy data
+
+---
+
+## 🚀 TÙY CHỈNH
+
+### Thêm trường mới
+
+1. Thêm cột trong Airtable
+2. Sửa file `index.html` để thêm input field
+3. Cập nhật JavaScript để gửi field mới
 
 ### Đổi màu sắc
-Trong `index.html`, tìm CSS:
+
+Trong CSS, tìm:
 ```css
 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 ```
-Thay `#667eea` và `#764ba2` bằng màu bạn thích.
-
-### Thêm trường mới
-Thêm vào form trong `index.html`:
-```html
-<div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required>
-</div>
-```
-
-### Thêm CAPTCHA
-Trong Formspree dashboard:
-1. Vào form → Settings
-2. Bật "reCAPTCHA"
-3. Thêm site key từ Google reCAPTCHA
+Thay đổi mã màu theo ý muốn.
 
 ---
 
-## 💰 Chi phí
+## 📞 HỖ TRỢ
 
-### Formspree Free Plan
-- ✅ 50 submissions/tháng
-- ✅ 1 form
-- ✅ Email notifications
-- ✅ CSV export
-
-### Nếu cần nhiều hơn
-- **Gold Plan:** $10/tháng → 1,000 submissions/tháng
-- **Platinum Plan:** $40/tháng → 10,000 submissions/tháng
-
----
-
-## 🔒 Bảo mật
-
-- ✅ Formspree mã hóa dữ liệu (HTTPS)
-- ✅ Không lưu data trên GitHub (chỉ HTML)
-- ✅ Có thể bật CAPTCHA chống spam
-- ✅ IP logging để tracking
-
----
-
-## 🐛 Troubleshooting
-
-### Form không submit được
-- Kiểm tra Form ID đã đúng chưa
-- Đảm bảo form action có `https://`
-
-### Không nhận được email
-- Kiểm tra spam folder
-- Trong Formspree dashboard, xem tab "Submissions"
-
-### GitHub Pages không hoạt động
-- Đảm bảo repo public
-- Đợi 5-10 phút sau khi bật Pages
-- Kiểm tra Settings → Pages → có link chưa
-
----
-
-## 📞 Hỗ trợ
-
-- **Formspree Docs:** https://formspree.io/docs/
+- **Airtable Docs:** https://airtable.com/developers/web/api/introduction
 - **GitHub Pages Docs:** https://docs.github.com/en/pages
 
 ---
