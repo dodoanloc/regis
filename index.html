@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký thông tin khách hàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .info-text {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        
+        .icon {
+            text-align: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .privacy-notice {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #666;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📝</div>
+        <h1>Đăng ký thông tin</h1>
+        
+        <div class="privacy-notice">
+            🔒 Thông tin của bạn sẽ được bảo mật và chỉ sử dụng cho mục đích liên hệ.
+        </div>
+        
+        <!-- Formspree Form - Replace YOUR_FORM_ID with actual Formspree form ID -->
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <!-- Hidden field for redirect after submission -->
+            <input type="hidden" name="_next" value="https://regis.dodoanloc.github.io/thank-you.html">
+            
+            <div class="form-group">
+                <label for="account_number">Số tài khoản *</label>
+                <input 
+                    type="text" 
+                    id="account_number" 
+                    name="account_number" 
+                    placeholder="Nhập số tài khoản" 
+                    required
+                    pattern="[0-9]+"
+                    title="Vui lòng chỉ nhập số"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Số điện thoại *</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    placeholder="Nhập số điện thoại" 
+                    required
+                    pattern="[0-9]{10,11}"
+                    title="Số điện thoại phải có 10-11 số"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="customer_name">Tên khách hàng *</label>
+                <input 
+                    type="text" 
+                    id="customer_name" 
+                    name="customer_name" 
+                    placeholder="Nhập tên khách hàng" 
+                    required
+                >
+            </div>
+            
+            <!-- Optional: Add subject to emails -->
+            <input type="hidden" name="_subject" value="Đăng ký mới từ website">
+            
+            <button type="submit">Đăng ký ngay</button>
+        </form>
+        
+        <p class="info-text">* Các trường bắt buộc phải điền</p>
+    </div>
+</body>
+</html>
