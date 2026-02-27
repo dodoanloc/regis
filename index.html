@@ -468,6 +468,21 @@
             tableName: 'Customers'
         };
         
+        // Load saved staff selection from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedStaff = localStorage.getItem('can_bo_quan_ly');
+            if (savedStaff) {
+                const select = document.getElementById('can_bo_quan_ly');
+                // Check if the saved value exists in options
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === savedStaff) {
+                        select.value = savedStaff;
+                        break;
+                    }
+                }
+            }
+        });
+        
         // Form submission handler
         document.getElementById('registrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -542,9 +557,16 @@
                 });
                 
                 if (response.ok) {
+                    // Save staff selection to localStorage
+                    const savedStaff = document.getElementById('can_bo_quan_ly').value;
+                    localStorage.setItem('can_bo_quan_ly', savedStaff);
+                    
                     messageDiv.className = 'message success';
                     messageDiv.innerHTML = '✨ <strong>Đăng ký thành công!</strong><br>Thông tin đã được lưu.';
                     document.getElementById('registrationForm').reset();
+                    
+                    // Restore staff selection after reset
+                    document.getElementById('can_bo_quan_ly').value = savedStaff;
                     
                     setTimeout(() => {
                         window.location.href = 'thank-you.html';
