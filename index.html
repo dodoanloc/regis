@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký thông tin khách hàng</title>
+    <title>Đăng ký thông tin QR Tài khoản/Loa Thần Tài</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,8 +14,10 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Be Vietnam Pro', 'Segoe UI', sans-serif;
+            background: linear-gradient(-45deg, #FF006E, #8338EC, #3A86FF, #FFBE0B, #FB5607);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,164 +25,339 @@
             padding: 20px;
         }
         
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 30px;
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.25),
+                0 0 0 1px rgba(255,255,255,0.2);
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,0,110,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .icon {
+            text-align: center;
+            font-size: 70px;
+            margin-bottom: 15px;
+            animation: bounce 2s ease infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-10px) rotate(5deg); }
         }
         
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF006E, #8338EC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
         }
         
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
         
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
+            color: #1a1a2e;
+            font-weight: 700;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        input {
+        label .required {
+            color: #FF006E;
+        }
+        
+        input, select {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 16px 18px;
+            border: 3px solid #e8e8e8;
+            border-radius: 16px;
             font-size: 16px;
-            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #fafafa;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
         }
         
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        input:focus, select:focus {
+            border-color: #8338EC;
+            background: #fff;
+            box-shadow: 
+                0 0 0 4px rgba(131, 56, 236, 0.15),
+                0 10px 25px rgba(131, 56, 236, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238338EC' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 45px;
         }
         
         button {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 18px;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 50%, #3A86FF 100%);
+            background-size: 200% 200%;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 16px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
         }
         
         button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 0, 110, 0.4);
+            background-position: 100% 100%;
+        }
+        
+        button:hover::before {
+            left: 100%;
         }
         
         button:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .info-text {
             text-align: center;
             color: #888;
             margin-top: 20px;
-            font-size: 13px;
-        }
-        
-        .icon {
-            text-align: center;
-            font-size: 60px;
-            margin-bottom: 20px;
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
         }
         
         .privacy-notice {
-            background: #f8f9ff;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: #666;
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, #fff5f7, #f0f0ff);
+            padding: 18px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #555;
+            border-left: 5px solid #FF006E;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .privacy-notice .lock-icon {
+            font-size: 20px;
+            flex-shrink: 0;
         }
         
         .message {
-            padding: 15px;
-            border-radius: 10px;
+            padding: 18px;
+            border-radius: 16px;
             margin-bottom: 20px;
             text-align: center;
             display: none;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .message.success {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
             color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
+            border: 2px solid #28a745;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
         }
         
         .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
+            background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+            color: #c53030;
+            border: 2px solid #FF006E;
+            box-shadow: 0 5px 15px rgba(255, 0, 110, 0.2);
         }
         
         .admin-link {
             display: block;
             text-align: center;
-            margin-top: 15px;
-            color: #667eea;
+            margin-top: 20px;
+            color: #8338EC;
             text-decoration: none;
             font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
         
         .admin-link:hover {
-            text-decoration: underline;
+            background: rgba(131, 56, 236, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Floating decorations */
+        .deco {
+            position: fixed;
+            font-size: 30px;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .deco:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .deco:nth-child(2) { top: 20%; right: 10%; animation-delay: 1s; }
+        .deco:nth-child(3) { bottom: 20%; left: 5%; animation-delay: 2s; }
+        .deco:nth-child(4) { bottom: 10%; right: 15%; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .icon {
+                font-size: 55px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Floating decorations -->
+    <div class="deco">✨</div>
+    <div class="deco">💎</div>
+    <div class="deco">🚀</div>
+    <div class="deco">🌟</div>
+    
     <div class="container">
-        <div class="icon">📝</div>
-        <h1>Đăng ký thông tin</h1>
+        <div class="icon">💳🔊</div>
+        <h1>Đăng ký thông tin<br>QR Tài khoản/Loa Thần Tài</h1>
+        <p class="subtitle">Nhanh chóng - Tiện lợi - An toàn</p>
         
         <div id="message" class="message"></div>
         
         <div class="privacy-notice">
-            🔒 Thông tin của bạn sẽ được bảo mật và chỉ sử dụng cho mục đích liên hệ.
+            <span class="lock-icon">🔒</span>
+            <span>Thông tin của bạn sẽ được bảo mật và chỉ sử dụng cho mục đích liên hệ.</span>
         </div>
         
         <form id="registrationForm">
             <div class="form-group">
-                <label for="loai_dang_ky">Loại đăng ký *</label>
+                <label for="loai_dang_ky">Loại đăng ký <span class="required">*</span></label>
                 <select 
                     id="loai_dang_ky" 
                     name="loai_dang_ky" 
                     required
-                    style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: white;"
                 >
                     <option value="">-- Chọn loại đăng ký --</option>
-                    <option value="QR Tài khoản">QR Tài khoản</option>
-                    <option value="Loa Thần Tài">Loa Thần Tài</option>
+                    <option value="QR Tài khoản">💳 QR Tài khoản</option>
+                    <option value="Loa Thần Tài">🔊 Loa Thần Tài</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label for="account_number">Số tài khoản *</label>
+                <label for="account_number">Số tài khoản <span class="required">*</span></label>
                 <input 
                     type="text" 
                     id="account_number" 
                     name="account_number" 
-                    placeholder="Nhập số tài khoản" 
+                    placeholder="Nhập số tài khoản..." 
                     required
                     pattern="[0-9]+"
                     title="Vui lòng chỉ nhập số"
@@ -186,12 +365,12 @@
             </div>
             
             <div class="form-group">
-                <label for="phone">Số điện thoại *</label>
+                <label for="phone">Số điện thoại <span class="required">*</span></label>
                 <input 
                     type="tel" 
                     id="phone" 
                     name="phone" 
-                    placeholder="Nhập số điện thoại" 
+                    placeholder="Nhập số điện thoại..." 
                     required
                     pattern="[0-9]{10,11}"
                     title="Số điện thoại phải có 10-11 số"
@@ -199,20 +378,20 @@
             </div>
             
             <div class="form-group">
-                <label for="customer_name">Tên khách hàng *</label>
+                <label for="customer_name">Tên khách hàng <span class="required">*</span></label>
                 <input 
                     type="text" 
                     id="customer_name" 
                     name="customer_name" 
-                    placeholder="Nhập tên khách hàng" 
+                    placeholder="Nhập tên khách hàng..." 
                     required
                 >
             </div>
             
-            <button type="submit" id="submitBtn">Đăng ký ngay</button>
+            <button type="submit" id="submitBtn">🚀 Đăng ký ngay</button>
         </form>
         
-        <p class="info-text">* Các trường bắt buộc phải điền</p>
+        <p class="info-text">✨ Các trường có dấu <span style="color:#FF006E;font-weight:bold">*</span> bắt buộc phải điền</p>
         
         <a href="admin.html" class="admin-link">🔐 Quản lý dữ liệu</a>
     </div>
@@ -222,7 +401,7 @@
         const AIRTABLE_CONFIG = {
             apiKey: 'patnWGs6JwKmhOfNX.23903394b7357442b9ed396470a06d3ad920a6727441fd312de9b62e55df8c91',
             baseId: 'appUPT733iVxTAc76',
-            tableId: 'tblxjz7JExG5Aob2E',  // Using Table ID instead of name
+            tableId: 'tblxjz7JExG5Aob2E',
             tableName: 'Customers'
         };
         
@@ -236,7 +415,7 @@
             // Validate baseId is configured
             if (!AIRTABLE_CONFIG.baseId) {
                 messageDiv.className = 'message error';
-                messageDiv.textContent = '⚠️ Vui lòng cấu hình Base ID trong mã nguồn. Xem hướng dẫn trong README.md';
+                messageDiv.textContent = '⚠️ Vui lòng cấu hình Base ID trong mã nguồn.';
                 return;
             }
             
@@ -246,7 +425,7 @@
             
             // Disable button
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Đang kiểm tra...';
+            submitBtn.textContent = '⏳ Đang kiểm tra...';
             
             try {
                 // Check for duplicate: Same account number + same registration type
@@ -261,22 +440,21 @@
                 );
                 
                 if (!checkResponse.ok) {
-                    throw new Error('Không thể kiểm tra dữ liệu trùng lặp');
+                    throw new Error('Không thể kiểm tra dữ liệu');
                 }
                 
                 const checkData = await checkResponse.json();
                 
                 if (checkData.records.length > 0) {
-                    // Duplicate found
                     messageDiv.className = 'message error';
-                    messageDiv.textContent = `⚠️ Số tài khoản ${accountNumber} đã đăng ký "${loaiDangKy}" rồi! Vui lòng chọn loại đăng ký khác.`;
+                    messageDiv.innerHTML = `⚠️ <strong>Số tài khoản ${accountNumber}</strong> đã đăng ký "${loaiDangKy}" rồi!<br>Vui lòng chọn loại khác.`;
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Đăng ký ngay';
+                    submitBtn.textContent = '🚀 Đăng ký ngay';
                     return;
                 }
                 
                 // No duplicate, proceed with submission
-                submitBtn.textContent = 'Đang lưu...';
+                submitBtn.textContent = '💾 Đang lưu...';
                 
                 // Get form data
                 const formData = {
@@ -300,10 +478,9 @@
                 
                 if (response.ok) {
                     messageDiv.className = 'message success';
-                    messageDiv.textContent = '✅ Đăng ký thành công! Thông tin đã được lưu.';
+                    messageDiv.innerHTML = '✨ <strong>Đăng ký thành công!</strong><br>Thông tin đã được lưu.';
                     document.getElementById('registrationForm').reset();
                     
-                    // Redirect to thank you page after 2 seconds
                     setTimeout(() => {
                         window.location.href = 'thank-you.html';
                     }, 2000);
@@ -329,7 +506,7 @@
                 console.error('Error:', error);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Đăng ký ngay';
+                submitBtn.textContent = '🚀 Đăng ký ngay';
             }
         });
     </script>
