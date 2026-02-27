@@ -164,6 +164,61 @@
             border-radius: 4px;
             font-family: monospace;
         }
+        
+        .filter-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-box label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .filter-box input[type="date"] {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-box input[type="date"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+        
+        .filter-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .filter-info {
+            color: #666;
+            font-size: 13px;
+            width: 100%;
+        }
     </style>
     <!-- SheetJS for Excel export -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
@@ -191,6 +246,15 @@
         
         <button class="refresh-btn" onclick="loadData()">🔄 Làm mới dữ liệu</button>
         <button class="export-btn" id="exportBtn" onclick="exportToExcel()" disabled>📥 Xuất Excel (.xls)</button>
+        
+        <div class="filter-box">
+            <label>📅 Từ ngày:</label>
+            <input type="date" id="fromDate" onchange="applyDateFilter()">
+            <label>Đến ngày:</label>
+            <input type="date" id="toDate" onchange="applyDateFilter()">
+            <button class="filter-btn" onclick="resetDateFilter()">↩️ Đặt lại</button>
+            <div class="filter-info" id="filterInfo"></div>
+        </div>
         
         <div id="loading" class="loading">Đang tải dữ liệu...⏳</div>
         <div id="error" class="error" style="display: none;"></div>
@@ -220,6 +284,109 @@
     <script>
         // Store data for export
         let customerData = [];
+        let filteredData = [];
+        
+        // Initialize date filters
+        function initializeDateFilters() {
+            const today = new Date();
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            // Format date as YYYY-MM-DD for input
+            const formatDate = (date) => {
+                return date.toISOString().split('T')[0];
+            };
+            
+            document.getElementById('toDate').value = formatDate(today);
+            document.getElementById('fromDate').value = formatDate(sevenDaysAgo);
+            
+            updateFilterInfo();
+        }
+        
+        // Apply date filter
+        function applyDateFilter() {
+            const fromDateStr = document.getElementById('fromDate').value;
+            const toDateStr = document.getElementById('toDate').value;
+            
+            if (!fromDateStr || !toDateStr) {
+                filteredData = customerData;
+            } else {
+                const fromDate = new Date(fromDateStr);
+                fromDate.setHours(0, 0, 0, 0);
+                
+                const toDate = new Date(toDateStr);
+                toDate.setHours(23, 59, 59, 999);
+                
+                filteredData = customerData.filter(record => {
+                    const recordDate = new Date(record.createdTime);
+                    return recordDate >= fromDate && recordDate <= toDate;
+                });
+            }
+            
+            updateFilterInfo();
+            renderTable(filteredData);
+        }
+        
+        // Reset date filter
+        function resetDateFilter() {
+            initializeDateFilters();
+            applyDateFilter();
+        }
+        
+        // Update filter info text
+        function updateFilterInfo() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            const infoDiv = document.getElementById('filterInfo');
+            
+            if (fromDate && toDate) {
+                const formatDisplay = (dateStr) => {
+                    const [year, month, day] = dateStr.split('-');
+                    return `${day}/${month}/${year}`;
+                };
+                infoDiv.innerHTML = `📊 Đang hiển thị: <strong>${filteredData.length}</strong> khách hàng từ <strong>${formatDisplay(fromDate)}</strong> đến <strong>${formatDisplay(toDate)}</strong>`;
+            } else {
+                infoDiv.innerHTML = '';
+            }
+        }
+        
+        // Render table with data
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="no-data">Không có dữ liệu trong khoảng thờii gian này</td></tr>';
+            } else {
+                // Sort by createdTime manually (newest first)
+                data.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+                
+                data.forEach(record => {
+                    const fields = record.fields;
+                    const date = record.createdTime 
+                        ? new Date(record.createdTime).toLocaleString('vi-VN')
+                        : 'N/A';
+                    
+                    let loaiDangKy = fields['Loại đăng ký'] || 'N/A';
+                    if (Array.isArray(loaiDangKy)) {
+                        loaiDangKy = loaiDangKy.join(', ');
+                    }
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${record.id.slice(0, 10)}...</td>
+                            <td>${loaiDangKy}</td>
+                            <td>${fields['Số tài khoản'] || fields['account_number'] || 'N/A'}</td>
+                            <td>${fields['Số điện thoại'] || fields['phone'] || 'N/A'}</td>
+                            <td>${fields['Tên khách hàng'] || fields['customer_name'] || 'N/A'}</td>
+                            <td>${fields['Cán bộ quản lý'] || 'N/A'}</td>
+                            <td>${fields['Ghi chú'] || ''}</td>
+                            <td>${date}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
         
         // Airtable Configuration - MUST match index.html
         const AIRTABLE_CONFIG = {
@@ -271,59 +438,24 @@
                 
                 // Store data for export
                 customerData = data.records;
+                filteredData = data.records;
                 
                 // Enable export button
                 exportBtn.disabled = false;
                 
-                // Update stats
+                // Update stats (total count)
                 document.getElementById('totalCount').textContent = data.records.length;
                 
                 // Count today's registrations
                 const today = new Date().toDateString();
                 const todayCount = data.records.filter(r => {
-                    // Airtable returns createdTime at the record level
                     const date = new Date(r.createdTime);
                     return date.toDateString() === today;
                 }).length;
                 document.getElementById('todayCount').textContent = todayCount;
                 
-                // Populate table
-                const tbody = document.getElementById('tableBody');
-                tbody.innerHTML = '';
-                
-                if (data.records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8" class="no-data">Chưa có dữ liệu</td></tr>';
-                } else {
-                    // Sort by createdTime manually (newest first)
-                    data.records.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
-                    
-                    data.records.forEach(record => {
-                        const fields = record.fields;
-                        // Use Airtable's createdTime from the record itself
-                        const date = record.createdTime 
-                            ? new Date(record.createdTime).toLocaleString('vi-VN')
-                            : 'N/A';
-                        
-                        // Handle Loại đăng ký - could be array (multi-select) or string
-                        let loaiDangKy = fields['Loại đăng ký'] || 'N/A';
-                        if (Array.isArray(loaiDangKy)) {
-                            loaiDangKy = loaiDangKy.join(', ');
-                        }
-                        
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${record.id.slice(0, 10)}...</td>
-                                <td>${loaiDangKy}</td>
-                                <td>${fields['Số tài khoản'] || fields['account_number'] || 'N/A'}</td>
-                                <td>${fields['Số điện thoại'] || fields['phone'] || 'N/A'}</td>
-                                <td>${fields['Tên khách hàng'] || fields['customer_name'] || 'N/A'}</td>
-                                <td>${fields['Cán bộ quản lý'] || 'N/A'}</td>
-                                <td>${fields['Ghi chú'] || ''}</td>
-                                <td>${date}</td>
-                            </tr>
-                        `;
-                    });
-                }
+                // Apply date filter and render
+                applyDateFilter();
                 
                 tableContainer.style.display = 'block';
                 
@@ -338,13 +470,15 @@
         
         // Export to Excel function
         function exportToExcel() {
-            if (customerData.length === 0) {
+            const dataToExport = filteredData.length > 0 ? filteredData : customerData;
+            
+            if (dataToExport.length === 0) {
                 alert('Không có dữ liệu để xuất!');
                 return;
             }
             
             // Prepare data for Excel
-            const excelData = customerData.map(record => {
+            const excelData = dataToExport.map(record => {
                 const fields = record.fields;
                 let loaiDangKy = fields['Loại đăng ký'] || 'N/A';
                 if (Array.isArray(loaiDangKy)) {
@@ -392,6 +526,9 @@
         
         // Load data on page load
         loadData();
+        
+        // Initialize date filters
+        initializeDateFilters();
     </script>
 </body>
 </html>
