@@ -388,6 +388,70 @@
                 >
             </div>
             
+            <div class="form-group">
+                <label for="can_bo_quan_ly">Cán bộ quản lý <span class="required">*</span></label>
+                <select 
+                    id="can_bo_quan_ly" 
+                    name="can_bo_quan_ly" 
+                    required
+                >
+                    <option value="">-- Chọn cán bộ quản lý --</option>
+                    <option value="Đàm Thị Thu Phương">Đàm Thị Thu Phương</option>
+                    <option value="Đặng Thị Hảo">Đặng Thị Hảo</option>
+                    <option value="Đỗ Doãn Lộc">Đỗ Doãn Lộc</option>
+                    <option value="Đỗ Quang Huy">Đỗ Quang Huy</option>
+                    <option value="Đỗ Thị Ngọc Anh">Đỗ Thị Ngọc Anh</option>
+                    <option value="Đỗ Thị Trang">Đỗ Thị Trang</option>
+                    <option value="Đỗ Tuấn Anh">Đỗ Tuấn Anh</option>
+                    <option value="Đỗ Tuấn Minh">Đỗ Tuấn Minh</option>
+                    <option value="Đỗ Văn Nam">Đỗ Văn Nam</option>
+                    <option value="Doãn Thị Dịu">Doãn Thị Dịu</option>
+                    <option value="Hà Sĩ Dũng">Hà Sĩ Dũng</option>
+                    <option value="Hoàng Thị Lê">Hoàng Thị Lê</option>
+                    <option value="Hoàng Thị Minh">Hoàng Thị Minh</option>
+                    <option value="Lê Nam Phương">Lê Nam Phương</option>
+                    <option value="Lê Thanh Xuân">Lê Thanh Xuân</option>
+                    <option value="Lê Thị Diễm Quỳnh">Lê Thị Diễm Quỳnh</option>
+                    <option value="Lê Thị Giang">Lê Thị Giang</option>
+                    <option value="Lê Thị Nga">Lê Thị Nga</option>
+                    <option value="Lê Thị Oanh">Lê Thị Oanh</option>
+                    <option value="Lê Thị Uyên">Lê Thị Uyên</option>
+                    <option value="Lê Thu Phương">Lê Thu Phương</option>
+                    <option value="Lê Xuân Quý">Lê Xuân Quý</option>
+                    <option value="Lý Thị Ngọc Mai">Lý Thị Ngọc Mai</option>
+                    <option value="Mai Thị Huyền">Mai Thị Huyền</option>
+                    <option value="Mai Thị Lan Anh">Mai Thị Lan Anh</option>
+                    <option value="Nguyễn Chí Thanh">Nguyễn Chí Thanh</option>
+                    <option value="Nguyễn Diệu Linh">Nguyễn Diệu Linh</option>
+                    <option value="Nguyễn Ngọc Tú">Nguyễn Ngọc Tú</option>
+                    <option value="Nguyễn Quốc Huy">Nguyễn Quốc Huy</option>
+                    <option value="Nguyễn Quốc Vượng Linh">Nguyễn Quốc Vượng Linh</option>
+                    <option value="Nguyễn Thị Hạnh">Nguyễn Thị Hạnh</option>
+                    <option value="Nguyễn Thị Hòa">Nguyễn Thị Hòa</option>
+                    <option value="Nguyễn Thị Như Quỳnh">Nguyễn Thị Như Quỳnh</option>
+                    <option value="Nguyễn Thị Quyên">Nguyễn Thị Quyên</option>
+                    <option value="Nguyễn Trịnh Phương Thảo">Nguyễn Trịnh Phương Thảo</option>
+                    <option value="Nguyễn Văn Sơn">Nguyễn Văn Sơn</option>
+                    <option value="Phạm Văn Khoa">Phạm Văn Khoa</option>
+                    <option value="Phùng Lê Diệu Linh">Phùng Lê Diệu Linh</option>
+                    <option value="Trần Thị Hồ Lan">Trần Thị Hồ Lan</option>
+                    <option value="Trịnh Ngọc Nam">Trịnh Ngọc Nam</option>
+                    <option value="Trịnh Quang Dũng">Trịnh Quang Dũng</option>
+                    <option value="Trịnh Thị Hường">Trịnh Thị Hường</option>
+                    <option value="Vũ Xuân Trường">Vũ Xuân Trường</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="ghi_chu">Ghi chú</label>
+                <input 
+                    type="text" 
+                    id="ghi_chu" 
+                    name="ghi_chu" 
+                    placeholder="Nhập ghi chú nếu có..."
+                >
+            </div>
+            
             <button type="submit" id="submitBtn">🚀 Đăng ký ngay</button>
         </form>
         
@@ -462,7 +526,9 @@
                         'Loại đăng ký': loaiDangKy,
                         'Số tài khoản': accountNumber,
                         'Số điện thoại': document.getElementById('phone').value,
-                        'Tên khách hàng': document.getElementById('customer_name').value
+                        'Tên khách hàng': document.getElementById('customer_name').value,
+                        'Cán bộ quản lý': document.getElementById('can_bo_quan_ly').value,
+                        'Ghi chú': document.getElementById('ghi_chu').value || ''
                     }
                 };
                 

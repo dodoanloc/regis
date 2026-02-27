@@ -204,6 +204,8 @@
                         <th>Số tài khoản</th>
                         <th>Số điện thoại</th>
                         <th>Tên khách hàng</th>
+                        <th>Cán bộ quản lý</th>
+                        <th>Ghi chú</th>
                         <th>Ngày đăng ký</th>
                     </tr>
                 </thead>
@@ -290,7 +292,7 @@
                 tbody.innerHTML = '';
                 
                 if (data.records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">Chưa có dữ liệu</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" class="no-data">Chưa có dữ liệu</td></tr>';
                 } else {
                     // Sort by createdTime manually (newest first)
                     data.records.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
@@ -315,6 +317,8 @@
                                 <td>${fields['Số tài khoản'] || fields['account_number'] || 'N/A'}</td>
                                 <td>${fields['Số điện thoại'] || fields['phone'] || 'N/A'}</td>
                                 <td>${fields['Tên khách hàng'] || fields['customer_name'] || 'N/A'}</td>
+                                <td>${fields['Cán bộ quản lý'] || 'N/A'}</td>
+                                <td>${fields['Ghi chú'] || ''}</td>
                                 <td>${date}</td>
                             </tr>
                         `;
@@ -353,6 +357,8 @@
                     'Số tài khoản': fields['Số tài khoản'] || fields['account_number'] || '',
                     'Số điện thoại': fields['Số điện thoại'] || fields['phone'] || '',
                     'Tên khách hàng': fields['Tên khách hàng'] || fields['customer_name'] || '',
+                    'Cán bộ quản lý': fields['Cán bộ quản lý'] || '',
+                    'Ghi chú': fields['Ghi chú'] || '',
                     'Ngày đăng ký': record.createdTime ? new Date(record.createdTime).toLocaleString('vi-VN') : ''
                 };
             });
@@ -367,6 +373,8 @@
                 { wch: 18 },  // Số tài khoản
                 { wch: 15 },  // Số điện thoại
                 { wch: 30 },  // Tên khách hàng
+                { wch: 25 },  // Cán bộ quản lý
+                { wch: 40 },  // Ghi chú
                 { wch: 20 }   // Ngày đăng ký
             ];
             
