@@ -159,6 +159,20 @@
         
         <form id="registrationForm">
             <div class="form-group">
+                <label for="loai_dang_ky">Loại đăng ký *</label>
+                <select 
+                    id="loai_dang_ky" 
+                    name="loai_dang_ky" 
+                    required
+                    style="width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; background: white;"
+                >
+                    <option value="">-- Chọn loại đăng ký --</option>
+                    <option value="QR Tài khoản">QR Tài khoản</option>
+                    <option value="Loa Thần Tài">Loa Thần Tài</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
                 <label for="account_number">Số tài khoản *</label>
                 <input 
                     type="text" 
@@ -233,6 +247,7 @@
             // Get form data
             const formData = {
                 fields: {
+                    'Loại đăng ký': document.getElementById('loai_dang_ky').value,
                     'Số tài khoản': document.getElementById('account_number').value,
                     'Số điện thoại': document.getElementById('phone').value,
                     'Tên khách hàng': document.getElementById('customer_name').value

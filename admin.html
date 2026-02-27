@@ -177,6 +177,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Loại đăng ký</th>
                         <th>Số tài khoản</th>
                         <th>Số điện thoại</th>
                         <th>Tên khách hàng</th>
@@ -253,7 +254,7 @@
                 tbody.innerHTML = '';
                 
                 if (data.records.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="no-data">Chưa có dữ liệu</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">Chưa có dữ liệu</td></tr>';
                 } else {
                     // Sort by createdTime manually (newest first)
                     data.records.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
@@ -265,9 +266,16 @@
                             ? new Date(record.createdTime).toLocaleString('vi-VN')
                             : 'N/A';
                         
+                        // Handle Loại đăng ký - could be array (multi-select) or string
+                        let loaiDangKy = fields['Loại đăng ký'] || 'N/A';
+                        if (Array.isArray(loaiDangKy)) {
+                            loaiDangKy = loaiDangKy.join(', ');
+                        }
+                        
                         tbody.innerHTML += `
                             <tr>
                                 <td>${record.id.slice(0, 10)}...</td>
+                                <td>${loaiDangKy}</td>
                                 <td>${fields['Số tài khoản'] || fields['account_number'] || 'N/A'}</td>
                                 <td>${fields['Số điện thoại'] || fields['phone'] || 'N/A'}</td>
                                 <td>${fields['Tên khách hàng'] || fields['customer_name'] || 'N/A'}</td>
