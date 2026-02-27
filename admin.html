@@ -130,6 +130,26 @@
             background: #45a049;
         }
         
+        .export-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }
+        
+        .export-btn:hover {
+            background: #1976D2;
+        }
+        
+        .export-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
         .config-box {
             background: #fff3cd;
             border: 1px solid #ffc107;
@@ -145,6 +165,8 @@
             font-family: monospace;
         }
     </style>
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -168,6 +190,7 @@
         </div>
         
         <button class="refresh-btn" onclick="loadData()">🔄 Làm mới dữ liệu</button>
+        <button class="export-btn" id="exportBtn" onclick="exportToExcel()" disabled>📥 Xuất Excel (.xls)</button>
         
         <div id="loading" class="loading">Đang tải dữ liệu...⏳</div>
         <div id="error" class="error" style="display: none;"></div>
@@ -193,6 +216,9 @@
     </div>
     
     <script>
+        // Store data for export
+        let customerData = [];
+        
         // Airtable Configuration - MUST match index.html
         const AIRTABLE_CONFIG = {
             apiKey: 'patnWGs6JwKmhOfNX.23903394b7357442b9ed396470a06d3ad920a6727441fd312de9b62e55df8c91',
@@ -206,6 +232,10 @@
             const error = document.getElementById('error');
             const tableContainer = document.getElementById('tableContainer');
             const configMessage = document.getElementById('configMessage');
+            const exportBtn = document.getElementById('exportBtn');
+            
+            // Disable export button while loading
+            exportBtn.disabled = true;
             
             // Check if baseId is configured
             if (!AIRTABLE_CONFIG.baseId) {
@@ -236,6 +266,12 @@
                 }
                 
                 const data = await response.json();
+                
+                // Store data for export
+                customerData = data.records;
+                
+                // Enable export button
+                exportBtn.disabled = false;
                 
                 // Update stats
                 document.getElementById('totalCount').textContent = data.records.length;
@@ -294,6 +330,56 @@
             } finally {
                 loading.style.display = 'none';
             }
+        }
+        
+        // Export to Excel function
+        function exportToExcel() {
+            if (customerData.length === 0) {
+                alert('Không có dữ liệu để xuất!');
+                return;
+            }
+            
+            // Prepare data for Excel
+            const excelData = customerData.map(record => {
+                const fields = record.fields;
+                let loaiDangKy = fields['Loại đăng ký'] || 'N/A';
+                if (Array.isArray(loaiDangKy)) {
+                    loaiDangKy = loaiDangKy.join(', ');
+                }
+                
+                return {
+                    'ID': record.id,
+                    'Loại đăng ký': loaiDangKy,
+                    'Số tài khoản': fields['Số tài khoản'] || fields['account_number'] || '',
+                    'Số điện thoại': fields['Số điện thoại'] || fields['phone'] || '',
+                    'Tên khách hàng': fields['Tên khách hàng'] || fields['customer_name'] || '',
+                    'Ngày đăng ký': record.createdTime ? new Date(record.createdTime).toLocaleString('vi-VN') : ''
+                };
+            });
+            
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 25 },  // ID
+                { wch: 20 },  // Loại đăng ký
+                { wch: 18 },  // Số tài khoản
+                { wch: 15 },  // Số điện thoại
+                { wch: 30 },  // Tên khách hàng
+                { wch: 20 }   // Ngày đăng ký
+            ];
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Danh sách KH');
+            
+            // Generate filename with current date
+            const today = new Date().toISOString().split('T')[0];
+            const filename = `Danh_sach_KH_${today}.xlsx`;
+            
+            // Download file
+            XLSX.writeFile(wb, filename);
         }
         
         // Load data on page load
